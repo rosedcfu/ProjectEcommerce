@@ -1,0 +1,35 @@
+﻿@model List<ProjectEcommerce.Models.ShoppingCartItem>
+
+<h2>Your Cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>$@item.Product.Price</td>
+                    <td>@item.Product.Stock</td>
+                    <td>
+                        <a asp-action="RemoveFromCart" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger">Remove</a>
+                        <a asp-controller="Order" asp-action="Confirm" class="btn btn-sm btn-success">Confirmar pedido</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
