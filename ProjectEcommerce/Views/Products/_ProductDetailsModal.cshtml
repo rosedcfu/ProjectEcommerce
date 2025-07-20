@@ -1,0 +1,40 @@
+﻿@model ProjectEcommerce.Models.Product
+
+<div class="modal fade" id="modalDetallesProducto" tabindex="-1" aria-labelledby="detallesProductoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header bg-info bg-opacity-75 text-dark rounded-top-4">
+                <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="detallesProductoLabel">
+                    <i class="bi bi-eye"></i> Detalles del Producto
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-12 col-md-5 text-center">
+                        <img id="details-image" src="@Model.ImageUrl" alt="Imagen del producto" class="img-fluid rounded-4 shadow" style="max-height: 240px; object-fit: contain;">
+                    </div>
+                    <div class="col-12 col-md-7">
+                        <h4 class="fw-bold" id="details-name">@Model.Name</h4>
+                        <p class="mb-2 small text-muted" id="details-description">@Model.Description</p>
+                        <div class="mb-2">
+                            <span class="badge bg-primary fs-6 px-3" id="details-price">
+                                <i class="bi bi-currency-dollar"></i> @Model.Price.ToString( "C0" )
+                            </span>
+                        </div>
+                        <div>
+                            <span class="badge bg-success bg-opacity-75 fw-semibold" id="details-stock">
+                                Stock: @Model.Stock
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light rounded-bottom-4">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

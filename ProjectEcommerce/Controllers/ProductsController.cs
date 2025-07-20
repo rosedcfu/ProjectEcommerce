@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectEcommerce.Data;
 using ProjectEcommerce.Models;
+using X.PagedList;
+using X.PagedList.Extensions;
+using X.PagedList.Mvc.Core;
+
 
 
 namespace ProjectEcommerce.Controllers
@@ -18,14 +22,26 @@ namespace ProjectEcommerce.Controllers
             _context = context;
         }
 
-        // GET: Products
-        public async Task<IActionResult> Index()
+        public IActionResult Index( int? page, string search, string stockFilter )
         {
-            var products = await _context.Products
-                .Where( p => p.Stock > 0 )
-                .ToListAsync();
+            int pageSize = 9;
+            int pageNumber = page ?? 1;
 
-            return View( products );
+            var products = _context.Products.AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
+                products = products.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
+            if (stockFilter == "disponible")
+                products = products.Where(p => p.Stock > 0);
+            else if (stockFilter == "agotado")
+                products = products.Where(p => p.Stock == 0);
+
+            var pagedList = products.OrderBy(p => p.Id).ToPagedList(pageNumber, pageSize);
+
+            ViewBag.CurrentSearch = search;
+            ViewBag.CurrentStock = stockFilter;
+
+            return View(pagedList);
         }
 
 
@@ -161,27 +177,6 @@ namespace ProjectEcommerce.Controllers
             TempData ["SuccessMessage"] = "✔️ Producto actualizado correctamente.";
             return RedirectToAction( nameof( Index ) );
         }
-        //public async Task<IActionResult> Estadisticas()
-        //{
-        //    var top3 = await _context.OrderItems
-        //        .GroupBy( i => i.Product )
-        //        .Select( g => new {
-        //            Product = g.Key,
-        //            TotalVendidas = g.Sum( i => i.Quantity )
-        //        } )
-        //        .OrderByDescending( p => p.TotalVendidas )
-        //        .Take( 3 )
-        //        .ToListAsync();
-
-        //    var totalVentas = await _context.Orders.SumAsync( o => o.TotalAmount );
-
-        //    var productos = await _context.Products.ToListAsync();
-
-        //    ViewData ["TotalVentas"] = totalVentas;
-        //    ViewData ["Top3"] = top3;
-
-        //    return View( productos );
-        //}
 
         // POST : Products/UpdateStock
         [HttpPost]
@@ -274,5 +269,28 @@ namespace ProjectEcommerce.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
+        //public IActionResult AjaxProductList( int? page, string search, string stockFilter )
+        //{
+        //    int pageSize = 9;
+        //    int pageNumber = page ?? 1;
+
+        //    var products = _context.Products.AsQueryable();
+
+        //    // Lógica de filtro/búsqueda
+        //    if (!string.IsNullOrEmpty( search ))
+        //        products = products.Where( p => p.Name.Contains( search ) || p.Description.Contains( search ) );
+        //    if (stockFilter == "disponible")
+        //        products = products.Where( p => p.Stock > 0 );
+        //    else if (stockFilter == "agotado")
+        //        products = products.Where( p => p.Stock == 0 );
+
+        //    var model = products.OrderBy( p => p.Id ).ToPagedList( pageNumber, pageSize );
+
+        //    ViewBag.CurrentSearch = search;
+        //    ViewBag.CurrentStock = stockFilter;
+
+        //    return PartialView( "_ProductCards", model );
+        //}
+
     }
 }

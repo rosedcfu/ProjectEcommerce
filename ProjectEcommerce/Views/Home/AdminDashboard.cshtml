@@ -1,0 +1,62 @@
+﻿@model ProjectEcommerce.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData ["Title"] = "Panel de Control - Admin";
+}
+
+<div class="container my-5">
+    <h2 class="fw-bold mb-4 text-primary">Panel de Administración</h2>
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-4 text-center">
+                <div class="mb-2"><i class="bi bi-box-seam fs-1 text-info"></i></div>
+                <div class="fw-semibold fs-4">@Model.TotalProducts</div>
+                <div class="text-muted">Productos</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-4 text-center">
+                <div class="mb-2"><i class="bi bi-basket2 fs-1 text-success"></i></div>
+                <div class="fw-semibold fs-4">@Model.TotalOrders</div>
+                <div class="text-muted">Pedidos</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-4 text-center">
+                <div class="mb-2"><i class="bi bi-currency-dollar fs-1 text-warning"></i></div>
+                <div class="fw-semibold fs-4">@Model.TotalSales.ToString( "C0" )</div>
+                <div class="text-muted">Ventas totales</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-4 text-center">
+                <div class="mb-2"><i class="bi bi-people fs-1 text-danger"></i></div>
+                <div class="fw-semibold fs-4">@Model.TotalCustomers</div>
+                <div class="text-muted">Clientes únicos</div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Top 3 productos más vendidos</h5>
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Unidades vendidas</th>
+                        <th>Ventas totales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prod in Model.TopProducts)
+                    {
+                        <tr>
+                            <td>@prod.Name</td>
+                            <td>@prod.UnitsSold</td>
+                            <td>@prod.Revenue.ToString( "C0" )</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -25,11 +25,12 @@
 
                 if (roles.Contains( "Admin" ))
                 {
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Dashboard" title="Dashboard" id="toggleDashboard">
-                            <i class="bi bi-list fs-5"></i>
-                        </a>
-                    </li>
+                    <button class="btn btn-primary" type="button"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#adminSidebar"
+                            aria-controls="adminSidebar">
+                        <i class="bi bi-list"></i>
+                    </button>
 
                     <div class="container-fluid">
                         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HANEUL</a>
@@ -47,11 +48,17 @@
                                 </li>
                         </div>
                     </div>
-                    
+
                 }
             }
             @if (!SignInManager.IsSignedIn( User ) || (await UserManager.GetRolesAsync( await UserManager.GetUserAsync( User ) )).Contains( "Customer" ))
             {
+                <button class="btn btn-primary" type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#customerSidebar"
+                        aria-controls="customerSidebar">
+                    <i class="bi bi-list"></i>
+                </button>
                 <div class="container-fluid">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HANEUL</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -81,26 +88,79 @@
         </nav>
     </header>
     <div class="container flex-grow-1">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 mb-5">
             @RenderBody()
         </main>
     </div>
+    <!-- Sidebar para Admin -->
+    <div class="offcanvas offcanvas-start text-bg-dark"
+         tabindex="-1"
+         id="adminSidebar"
+         aria-labelledby="adminSidebarLabel"
+         style="width: 260px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="adminSidebarLabel">
+                <i class="bi bi-lightning-charge-fill text-warning me-2"></i> CPanel
+            </h5>
+            <button type="button" class="btn-close btn-close-black"
+                    data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+        <div class="offcanvas-body px-0 pt-3">
+            <nav class="nav flex-column">
+                <a class="nav-link text-black px-4 py-2" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+                <a class="nav-link text-black px-4 py-2" asp-controller="Products" asp-action="Index">
+                    <i class="bi bi-box-seam me-2"></i> Productos
+                </a>
+                <a class="nav-link text-black px-4 py-2" asp-controller="Order" asp-action="AllOrders">
+                    <i class="bi bi-receipt me-2"></i> Pedidos
+                </a>
+                <a class="nav-link text-black px-4 py-2" asp-controller="Cart" asp-action="Index">
+                    <i class="bi bi-cart me-2"></i> Carrito
+                </a>
+                <a class="nav-link text-black px-4 py-2" asp-controller="Home" asp-action="Privacy">
+                    <i class="bi bi-shield-lock me-2"></i> Privacidad
+                </a>
+            </nav>
+        </div>
+    </div>
 
+    <!-- Sidebar para Customer -->
+    <div class="offcanvas offcanvas-start text-bg-dark"
+         tabindex="-1"
+         id="customerSidebar"
+         aria-labelledby="customerSidebarLabel"
+         style="width: 260px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="customerSidebarLabel">
+                <i class="bi bi-person-circle text-info me-2"></i> Haneul Store
+            </h5>
+            <button type="button" class="btn-close btn-close-black"
+                    data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+        <div class="offcanvas-body px-0 pt-3">
+            <nav class="nav flex-column">
+                <a class="nav-link text-black px-4 py-2" asp-controller="Store" asp-action="Index">
+                    <i class="bi bi-shop me-2"></i> Tienda
+                </a>
+                <a class="nav-link text-black px-4 py-2" asp-controller="Cart" asp-action="Index">
+                    <i class="bi bi-cart me-2"></i> Carrito
+                </a>
+                <a class="nav-link text-black px-4 py-2" asp-controller="Order" asp-action="MyOrders">
+                    <i class="bi bi-bag-check me-2"></i> Mis Pedidos
+                </a>
+                <a class="nav-link text-black px-4 py-2" asp-controller="Home" asp-action="Privacy">
+                    <i class="bi bi-shield-lock me-2"></i> Privacidad
+                </a>
+            </nav>
+        </div>
+    </div>
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - EcommercePlatform - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-
-    @if (TempData ["SuccessMessage"] != null)
-    {
-        <span id="temp-success" data-message="@TempData["SuccessMessage"]"></span>
-    }
-    @if (TempData ["ErrorMessage"] != null)
-    {
-        <span id="temp-error" data-message="@TempData["ErrorMessage"]"></span>
-    }
-
 
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
 
@@ -109,4 +169,16 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
+@if (TempData ["SuccessMessage"] != null)
+{
+    <span id="temp-success" data-message="@TempData ["SuccessMessage"]"></span>
+}
+@if (TempData ["ErrorMessage"] != null)
+{
+    <span id="temp-error" data-message="@TempData ["ErrorMessage"]"></span>
+}
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 </html>

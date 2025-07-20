@@ -1,0 +1,32 @@
+﻿@* _FilterBar.cshtml *@
+@{
+    var searchQuery = ViewBag.CurrentSearch as string ?? "";
+    var stockFilter = ViewBag.CurrentStock as string ?? "";
+}
+
+<form form method="get" id="filterForm" class="row g-2 align-items-end mb-4" autocomplete="off">
+    <!-- Buscar por nombre/descripción -->
+    <div class="col-sm-5 col-12">
+        <label for="search" class="form-label">Buscar producto</label>
+        <input name="search" id="search" type="text" class="form-control"
+               placeholder="Nombre o descripción..."
+               value="@searchQuery" />
+    </div>
+
+    <!-- Filtrar por stock -->
+    <div class="col-sm-4 col-12">
+        <label for="stockFilter" class="form-label">Stock</label>
+        <select name="stockFilter" id="stockFilter" class="form-select">
+            <option value="" selected="@(string.IsNullOrEmpty(stockFilter))">Todos</option>
+            <option value="disponible" selected="@(stockFilter == "disponible")">Solo disponibles</option>
+            <option value="agotado" selected="@(stockFilter == "agotado")">Sin stock</option>
+        </select>
+    </div>
+
+    <!-- Botón filtrar -->
+    <div class="col-sm-3 col-12 d-grid">
+        <button class="btn btn-primary" type="submit">
+            <i class="bi bi-search"></i> Filtrar
+        </button>
+    </div>
+</form>

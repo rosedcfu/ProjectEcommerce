@@ -1,63 +1,128 @@
-﻿@model IEnumerable<ProjectEcommerce.Models.Product>
-
+﻿@model X.PagedList.IPagedList<ProjectEcommerce.Models.Product>
+@using X.PagedList.Mvc.Core
 @{
-    ViewData["Title"] = "Index";
+    ViewData ["Title"] = "Productos";
 }
 
-<h1>Dashboard</h1>
+<div id="main-bg" class="container-fluid px-4 py-4 main-bg" ">
+@Html.Partial( "_FilterBar")
 
-<p>
-    <a asp-action="Create">+Crear nuevo producto</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor( model => model.ImageUrl )
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <img src="@item.ImageUrl" alt="@item.Name" width="70" height="70" class="img-thumbnail" onerror="this.onerror=null; this.src='/images/no-image.png';" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td class="action-buttons">
-                <div class="btn-group" role="group">
-                    <form asp-action="ReduceStock" asp-route-id="@item.Id" method="post" style="display: flex;">
-                        <input type="number" name="quantityToRemove" min="1" max="@item.Stock" value="@item.Stock" class="form-control form-control-sm me-2" style="width: 80px;" min="0" />
-                            <button type="submit" class="btn btn-sm btn-danger text-white" onclick="return confirm('¿Actualizar stock del producto?')"><i class="bi bi-trash"></i></button>
-                    </form>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-success btn-sm" title="Editar">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" title="Detalles">
-                        <i class="fas fa-info-circle"></i> Detalles</a>
-                </div>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+            <h1 class="fw-bold mb-1 page-title">Panel de Productos</h1>
+            <div class="text-muted small mb-2">Administra tu catálogo fácilmente</div>
+        </div>
+        <button type="button" class="btn btn-primary btn-lg d-flex align-items-center gap-2 shadow-sm"
+                data-bs-toggle="modal" data-bs-target="#modalNuevoProducto">
+            <i class="bi bi-plus-circle"></i> Nuevo producto
+        </button>
+
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info mt-5">
+            <i class="bi bi-info-circle-fill"></i> No hay productos registrados todavía.
+        </div>
+    }
+    else
+    {
+        <div id="productosContainer" class="vh-100 pe-2 mb-5">
+            <div class="row g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card border-0 shadow-sm product-card h-100 p-3">
+                            <div class="d-flex gap-3 align-items-start">
+                                <img src="@item.ImageUrl"
+                                     alt="@item.Name"
+                                     class="rounded-4 border product-img shadow"
+                                     onerror="this.onerror=null; this.src='/images/no-image.png';" />
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <h5 class="fw-semibold mb-0 product-name">@item.Name</h5>
+                                        <span class="badge bg-primary bg-opacity-75 fs-6 shadow-sm px-3">
+                                            @item.Price.ToString( "C0" )
+                                        </span>
+                                    </div>
+                                    <div class="small text-muted mb-1" style="min-height:32px;">@item.Description</div>
+                                    <span class="badge @((item.Stock <= 5) ? "bg-danger" : "bg-success") bg-opacity-75 fw-semibold mb-2">
+                                        Stock: @item.Stock
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mt-3 d-flex flex-wrap gap-2 justify-content-end align-items-center">
+                                <!-- Formulario eliminar/reducir stock -->
+                                <form asp-action="ReduceStock" asp-route-id="@item.Id" method="post" class="d-flex align-items-center gap-2">
+                                    <input type="number"
+                                           name="quantityToRemove"
+                                           min="1"
+                                           max="@item.Stock"
+                                           value="1"
+                                           class="form-control form-control-sm border-secondary"
+                                           style="width: 72px;"
+                                           title="Cantidad a eliminar" />
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm d-flex align-items-center gap-1"
+                                            title="Eliminar unidades"
+                                            onclick="return confirm('¿Actualizar stock del producto?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                                <button type="button"
+                                        class="btn btn-outline-warning btn-sm d-flex align-items-center gap-1 btn-edit-product"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditarProducto"
+                                        data-id="@item.Id"
+                                        data-name="@item.Name"
+                                        data-price="@item.Price.ToString( "F2", System.Globalization.CultureInfo.InvariantCulture )"
+                                        data-description="@item.Description"
+                                        data-stock="@item.Stock"
+                                        data-image="@item.ImageUrl">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-info btn-sm d-flex align-items-center gap-1 btn-details-product"
+                                        data-id="@item.Id"
+                                        data-name="@item.Name"
+                                        data-description="@item.Description"
+                                        data-price="@item.Price.ToString( "C0" )"
+                                        data-stock="@item.Stock"
+                                        data-image="@item.ImageUrl"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalDetallesProducto"
+                                        title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!-- PAGINACIÓN -->
+                <nav aria-label="Paginación de productos" class="d-flex justify-content-center mt-4">
+                    @Html.PagedListPager(
+                             Model,
+                             page => Url.Action( "Index", new { page } ),
+                             new PagedListRenderOptions
+                {
+                    LiElementClasses = new [] { "page-item" },
+                    PageClasses = new [] { "page-link" },
+                    UlElementClasses = new [] { "pagination", "pagination-lg" },
+                    MaximumPageNumbersToDisplay = 5,
+                    DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                    DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Always
+                }
+                             )
+                </nav>
+            </div>
+        </div>
+    }
+</div>
+@Html.Partial( "_CreateProductModal", new ProjectEcommerce.Models.Product() )
+@Html.Partial( "_EditProductModal", new ProjectEcommerce.Models.Product() )
+@Html.Partial( "_ProductDetailsModal", new ProjectEcommerce.Models.Product() )

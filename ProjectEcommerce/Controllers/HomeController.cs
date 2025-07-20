@@ -1,17 +1,24 @@
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProjectEcommerce.Data;
 using ProjectEcommerce.Models;
-using System.Diagnostics;
+using ProjectEcommerce.Models.ViewModels;
 
 namespace ProjectEcommerce.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _ctx;
+        private readonly UserManager<ApplicationUser> _um;
 
-        public HomeController( ILogger<HomeController> logger )
+        public HomeController( ILogger<HomeController> logger, 
+        ApplicationDbContext ctx,
+        UserManager<ApplicationUser> um)
         {
             _logger = logger;
+            _ctx = ctx;
+            _um = um;
         }
 
         public IActionResult Index()
@@ -24,16 +31,6 @@ namespace ProjectEcommerce.Controllers
             return View();
         }
 
-        [ResponseCache( Duration = 0, Location = ResponseCacheLocation.None, NoStore = true )]
-        public IActionResult Error()
-        {
-            return View( new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier } );
-        }
-        [Authorize( Roles = "Admin" )]
-        public IActionResult Dashboard()
-        {
-            return View();
-        }
-
+        
     }
 }

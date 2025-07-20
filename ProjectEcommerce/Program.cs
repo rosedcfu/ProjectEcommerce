@@ -18,7 +18,23 @@ builder.Services.AddDefaultIdentity<ApplicationUser>( options => options.SignIn.
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthorization( options =>
+{
+    options.AddPolicy( "IsAdmin", p => p.RequireRole( "Admin" ) );
+    options.AddPolicy( "IsCustomer", p => p.RequireRole( "Customer" ) );
+} );
+
 var app = builder.Build();
+
+app.MapControllerRoute(
+  name: "areas",
+  pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
+);
+app.MapControllerRoute(
+  name: "default",
+  pattern: "{controller=Home}/{action=Index}/{id?}"
+);
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

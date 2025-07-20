@@ -1,6 +1,50 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData ["Title"] = "Política de Privacidad Administrador";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-5">
+                    <h1 class="mb-4 fw-bold text-primary">
+                        <i class="bi bi-shield-lock"></i>
+                        @ViewData ["Title"]
+                    </h1>
+                    <p class="mb-4 text-muted">
+                        En esta página encontrarás las directrices sobre el manejo, protección y uso de los datos dentro del panel de administración.
+                        Por favor, lee detenidamente para asegurar el cumplimiento de las normas y la protección de la información sensible.
+                    </p>
+
+                    <h4 class="fw-semibold mt-4 mb-2 text-secondary">
+                        <i class="bi bi-database-check"></i> Datos que gestionas como administrador
+                    </h4>
+                    <ul class="mb-4">
+                        <li>Información de productos y catálogo</li>
+                        <li>Datos de usuarios y clientes</li>
+                        <li>Historial de pedidos y transacciones</li>
+                        <li>Acciones sobre stock y administración general</li>
+                    </ul>
+
+                    <h4 class="fw-semibold mt-4 mb-2 text-secondary">
+                        <i class="bi bi-shield-check"></i> Responsabilidades del administrador
+                    </h4>
+                    <ul class="mb-4">
+                        <li>Proteger el acceso a la información confidencial.</li>
+                        <li>No compartir credenciales de acceso.</li>
+                        <li>Reportar cualquier incidente de seguridad inmediatamente.</li>
+                        <li>Gestionar la información según las leyes y políticas de la empresa.</li>
+                    </ul>
+
+                    <h4 class="fw-semibold mt-4 mb-2 text-secondary">
+                        <i class="bi bi-envelope"></i> Contacto y soporte
+                    </h4>
+                    <p class="mb-0">
+                        Si tienes dudas o encuentras problemas relacionados con la privacidad o la seguridad, comunícate con el equipo de soporte:
+                        <a href="mailto:soporte@haneul.com" class="text-primary">soporte@haneul.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

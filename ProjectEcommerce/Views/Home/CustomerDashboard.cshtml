@@ -1,0 +1,21 @@
+﻿@model ProjectEcommerce.Models.ViewModels.CustomerDashboardViewModel
+@{
+    ViewData ["Title"] = "Mi Panel";
+}
+
+<h1>Mi Panel de Cliente</h1>
+<p>Ítems en carrito: <strong>@Model.CartItemCount</strong></p>
+<h3>Mis últimos pedidos</h3>
+<table class="table">
+    <thead><tr><th>#</th><th>Fecha</th><th>Total</th></tr></thead>
+    <tbody>
+        @foreach (var o in Model.RecentOrders)
+        {
+            <tr>
+                <td>@o.OrderId</td>
+                <td>@o.DatePlaced.ToShortDateString()</td>
+                <td>@o.Total.ToString( "C0" )</td>
+            </tr>
+        }
+    </tbody>
+</table>

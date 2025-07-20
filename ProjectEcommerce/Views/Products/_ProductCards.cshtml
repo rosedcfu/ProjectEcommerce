@@ -1,0 +1,88 @@
+﻿@model X.PagedList.IPagedList<ProjectEcommerce.Models.Product>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList
+
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-5">
+        <i class="bi bi-info-circle-fill"></i> No hay productos encontrados.
+    </div>
+}
+else
+{
+    <div id="product-list" class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm product-card h-100 p-3">
+                    <div class="d-flex gap-3 align-items-start">
+                        <img src="@item.ImageUrl"
+                             alt="@item.Name"
+                             class="rounded-4 border product-img shadow"
+                             onerror="this.onerror=null; this.src='/images/no-image.png';" />
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h5 class="fw-semibold mb-0 product-name">@item.Name</h5>
+                                <span class="badge bg-primary bg-opacity-75 fs-6 shadow-sm px-3">
+                                    @item.Price.ToString( "C0" )
+                                </span>
+                            </div>
+                            <div class="small text-muted mb-1" style="min-height:32px;">@item.Description</div>
+                            <span class="badge @((item.Stock <= 5) ? "bg-danger" : "bg-success") bg-opacity-75 fw-semibold mb-2">
+                                Stock: @item.Stock
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mt-3 d-flex flex-wrap gap-2 justify-content-end align-items-center">
+                        @* Aquí puedes añadir los botones de editar, eliminar, detalles, etc. *@
+                        <button type="button"
+                                class="btn btn-outline-warning btn-sm d-flex align-items-center gap-1 btn-edit-product"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEditarProducto"
+                                data-id="@item.Id"
+                                data-name="@item.Name"
+                                data-price="@item.Price.ToString( "F2", System.Globalization.CultureInfo.InvariantCulture )"
+                                data-description="@item.Description"
+                                data-stock="@item.Stock"
+                                data-image="@item.ImageUrl">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-outline-info btn-sm d-flex align-items-center gap-1 btn-details-product"
+                                data-id="@item.Id"
+                                data-name="@item.Name"
+                                data-description="@item.Description"
+                                data-price="@item.Price.ToString( "C0" )"
+                                data-stock="@item.Stock"
+                                data-image="@item.ImageUrl"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalDetallesProducto"
+                                title="Ver detalles">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @* PAGINACIÓN - Opcional, si quieres mostrar los links de páginas también aquí *@
+    <nav aria-label="Paginación de productos" class="d-flex justify-content-center mt-4">
+        @Html.PagedListPager(
+                Model,
+                page => Url.Action( "Filter", new { page } ),  // O "Index" según como quieras manejarlo
+                new PagedListRenderOptions
+    {
+        LiElementClasses = new [] { "page-item" },
+        PageClasses = new [] { "page-link" },
+        UlElementClasses = new [] { "pagination", "pagination-lg" },
+        MaximumPageNumbersToDisplay = 5,
+        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always
+    })
+    </nav>
+}

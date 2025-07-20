@@ -1,0 +1,56 @@
+﻿@model ProjectEcommerce.Models.Product
+
+<div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-labelledby="editarProductoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header bg-warning bg-opacity-75 text-dark rounded-top-4">
+                <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="editarProductoLabel">
+                    <i class="bi bi-pencil-square"></i> Editar Producto
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" name="Id" />
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nombre del producto</label>
+                            <input name="Name" class="form-control form-control-lg rounded-3" placeholder="Ej: Bolso ejecutivo" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Precio</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                <input name="Price" type="number" step="0.01" min="0" class="form-control form-control-lg rounded-3" placeholder="Ej: 19990" required />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Descripción</label>
+                            <textarea name="Description" class="form-control rounded-3" rows="2" placeholder="Describe tu producto" required></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Cantidad en stock</label>
+                            <input name="Stock" type="number" min="0" class="form-control form-control-lg rounded-3" placeholder="Ej: 20" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Imagen actual</label>
+                            <div class="mb-2">
+                                <img id="edit-image-preview" src="/images/no-image.png" alt="Imagen actual" class="img-thumbnail rounded-3" style="max-width: 120px;">
+                            </div>
+                            <input type="file" name="ImageFile" accept="image/*" class="form-control form-control-lg rounded-3" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light rounded-bottom-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-warning d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle"></i> Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
